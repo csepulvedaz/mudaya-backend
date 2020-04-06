@@ -5,15 +5,12 @@ import "./database";
 
 const app = express();
 
-app.set("port", process.env.PORT || 3000);
-
-let root = { hello: () => "Hello world!" };
+app.set("port", process.env.PORT || 4000);
 
 app.use(
     "/graphql",
     graphqlHTTP({
         schema: schema,
-        rootValue: root,
         graphiql: true,
     })
 );
