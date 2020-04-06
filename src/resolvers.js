@@ -38,21 +38,14 @@ export const resolvers = {
         //Create Vehicle
         async createVehicle(_, { input }) {
             const newVehicle = new Vehicle(input);
-            let createdVehicle;
             return await newVehicle
                 .save()
-                .then(async (result) => {
-                    createdVehicle = {
-                        ...result._doc,
-                        _id: result._doc._id.toString(),
-                    };
-                    return await Driver.findById(input.idDriver);
-                })
+                .then(async () => await Driver.findById(input.idDriver))
                 .then(async (driver) => {
                     driver.idVehicle = newVehicle;
-                    return await driver.save();
-                })
-                .then(() => createdVehicle);
+                    await driver.save();
+                    return newVehicle;
+                });
         },
         async deleteVehicle(_, { _id }) {
             return await Vehicle.findByIdAndDelete(_id);
