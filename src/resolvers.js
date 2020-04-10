@@ -11,11 +11,11 @@ export const resolvers = {
         login: async (_, { email, password }) => {
             const user = await User.findOne({ email: email });
             if (!user) {
-                throw new Error("User does not exist!");
+                throw new Error("El correo no existe!");
             }
             const isEqual = password === user.password;
             if (!isEqual) {
-                throw new Error("Password is incorrect!");
+                throw new Error("Contraseña incorrecta!");
             }
             const token = jwt.sign(
                 {
