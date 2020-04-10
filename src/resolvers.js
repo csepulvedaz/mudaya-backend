@@ -8,6 +8,9 @@ export const resolvers = {
         Users: async () => {
             return await User.find();
         },
+        profileUser: async (_,{_id}) => {
+            return await User.findOne({_id : _id});
+        },
         login: async (_, { email, password }) => {
             const user = await User.findOne({ email: email });
             if (!user) {
