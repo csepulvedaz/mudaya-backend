@@ -5,6 +5,7 @@ const typeDefs = `
 
     type Query {
         Users: [User]
+        profileUser(_id:Int!):User
     }
 
     type User {
