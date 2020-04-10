@@ -1,16 +1,39 @@
+import jwt from "jsonwebtoken";
 import User from "./models/User";
 import Driver from "./models/Driver";
 import Vehicle from "./models/Vehicle";
 
 export const resolvers = {
     Query: {
-        async Users() {
+        Users: async () => {
             return await User.find();
         },
-
-        async profileUser(_,{_id}){
+        profileUser: async (_,{_id}) => {
             return await User.findOne({_id : _id});
-        }
+        },
+        login: async (_, { email, password }) => {
+            const user = await User.findOne({ email: email });
+            if (!user) {
+                throw new Error("El correo no existe!");
+            }
+            const isEqual = password === user.password;
+            if (!isEqual) {
+                throw new Error("Contraseña incorrecta!");
+            }
+            const token = jwt.sign(
+                {
+                    userId: user._id,
+                    email: user.email,
+                },
+                "somesupersecretkey",
+                { expiresIn: "1h" }
+            );
+            return {
+                userId: user._id,
+                token: token,
+                tokenExpiration: 1,
+            };
+        },
     },
     Mutation: {
         //Create User

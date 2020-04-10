@@ -5,7 +5,14 @@ const typeDefs = `
 
     type Query {
         Users: [User]
-        profileUser(_id:Int!):User
+        profileUser(_id:Int!): User
+        login(email: String!, password: String!): AuthData
+    }
+
+    type AuthData {
+        userId: Int!
+        token: String!
+        tokenExpiration: Int!
     }
 
     type User {
