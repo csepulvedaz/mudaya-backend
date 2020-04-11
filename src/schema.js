@@ -40,7 +40,7 @@ const typeDefs = `
         year: Int!
         type: String!
         dimensions: String!
-        capacity: Int!
+        capacity: String!
         commentary: String!
         idDriver: Int!
     }
@@ -82,7 +82,7 @@ const typeDefs = `
         year: Int!
         type: String!
         dimensions: String!
-        capacity: Int!
+        capacity: String!
         commentary: String!
         idDriver: Int!
     }
