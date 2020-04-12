@@ -34,6 +34,9 @@ export const resolvers = {
                 tokenExpiration: 1,
             };
         },
+        Vehicles: async () => {
+            return await Vehicle.find();
+        },
     },
     Mutation: {
         //Create User
