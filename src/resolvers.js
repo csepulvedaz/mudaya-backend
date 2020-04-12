@@ -55,6 +55,9 @@ export const resolvers = {
                 tokenExpiration: 1,
             };
         },
+        Vehicles: async () => {
+            return await Vehicle.find();
+        },
     },
     Mutation: {
         //Create User
@@ -105,6 +108,10 @@ export const resolvers = {
 
         //Create Vehicle
         async createVehicle(_, { input }) {
+            const id = await Vehicle.findOne({ _id: input._id });
+            if (id) {
+                throw new Error("Ya existe un vehiculo con esa placa!");
+            }
             const newVehicle = new Vehicle(input);
             return await newVehicle
                 .save()

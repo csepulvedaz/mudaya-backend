@@ -1,5 +1,5 @@
-import { makeExecutableSchema } from "graphql-tools";
-import { resolvers } from "./resolvers";
+import {makeExecutableSchema} from "graphql-tools";
+import {resolvers} from "./resolvers";
 
 const typeDefs = `
 
@@ -7,6 +7,7 @@ const typeDefs = `
         Users: [User]
         profileUser(_id:Int!): User
         login(email: String!, password: String!): AuthData
+        Vehicles: [Vehicle]
     }
 
     type AuthData {
