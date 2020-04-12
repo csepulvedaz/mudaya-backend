@@ -7,7 +7,7 @@ const typeDefs = `
         Users: [User]
         profileUser(_id:Int!): User
         login(email: String!, password: String!): AuthData
-        Vehicles: [Vehicle]
+        Vehicles(type: String): [Vehicle]
     }
 
     type AuthData {

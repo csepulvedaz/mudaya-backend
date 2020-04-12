@@ -55,7 +55,8 @@ export const resolvers = {
                 tokenExpiration: 1,
             };
         },
-        Vehicles: async () => {
+        Vehicles: async (_, { type }) => {
+            if (type) return await Vehicle.find({ type: type });
             return await Vehicle.find();
         },
     },
