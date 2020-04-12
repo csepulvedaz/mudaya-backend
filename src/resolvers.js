@@ -5,7 +5,7 @@ import Vehicle from "./models/Vehicle";
 
 export const resolvers = {
     Query: {
-        Users: async () => {
+        users: async () => {
             return await User.find();
         },
         profileUser: async (_, { _id }) => {
@@ -55,7 +55,7 @@ export const resolvers = {
                 tokenExpiration: 1,
             };
         },
-        Vehicles: async (_, { type }) => {
+        vehicles: async (_, { type }) => {
             if (type) return await Vehicle.find({ type: type });
             return await Vehicle.find();
         },
