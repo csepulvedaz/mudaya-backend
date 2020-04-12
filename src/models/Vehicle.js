@@ -29,7 +29,7 @@ const vehicleSchema = new Schema(
         },
         commentary: {
             type: String,
-            required: true,
+            // required: true,
         },
         idDriver: {
             type: Number,

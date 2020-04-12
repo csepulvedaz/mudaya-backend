@@ -8,28 +8,49 @@ export const resolvers = {
         Users: async () => {
             return await User.find();
         },
-        profileUser: async (_,{_id}) => {
-            return await User.findOne({_id : _id});
+        profileUser: async (_, { _id }) => {
+            return await User.findOne({ _id: _id });
         },
         login: async (_, { email, password }) => {
             const user = await User.findOne({ email: email });
-            if (!user) {
+            const driver = await Driver.findOne({ email: email });
+            let currentPassword;
+            let currentId;
+            let currentEmail;
+            let currentClient;
+            if (!user && !driver) {
                 throw new Error("El correo no existe!");
             }
-            const isEqual = password === user.password;
+            if (user && driver) {
+                throw new Error("Error!!");
+            }
+            if (user) {
+                currentId = user._id;
+                currentPassword = user.password;
+                currentEmail = user.email;
+                currentClient = "user";
+            }
+            if (driver) {
+                currentId = driver._id;
+                currentPassword = driver.password;
+                currentEmail = driver.email;
+                currentClient = "driver";
+            }
+            const isEqual = password === currentPassword;
             if (!isEqual) {
                 throw new Error("Contraseña incorrecta!");
             }
             const token = jwt.sign(
                 {
-                    userId: user._id,
-                    email: user.email,
+                    userId: currentId,
+                    email: currentEmail,
                 },
                 "somesupersecretkey",
                 { expiresIn: "1h" }
             );
             return {
-                userId: user._id,
+                client: currentClient,
+                userId: currentId,
                 token: token,
                 tokenExpiration: 1,
             };
@@ -41,6 +62,16 @@ export const resolvers = {
     Mutation: {
         //Create User
         async createUser(_, { input }) {
+            const id = await User.findOne({ _id: input._id });
+            const email = await User.findOne({ email: input.email });
+            if (id) {
+                throw new Error(
+                    "Ya existe una cuenta con ese número de identificación!"
+                );
+            }
+            if (email) {
+                throw new Error("Ya existe una cuenta con ese correo!");
+            }
             const newUser = new User(input);
             await newUser.save();
             return newUser;
@@ -54,6 +85,16 @@ export const resolvers = {
 
         //Create Driver
         async createDriver(_, { input }) {
+            const id = await Driver.findOne({ _id: input._id });
+            const email = await Driver.findOne({ email: input.email });
+            if (id) {
+                throw new Error(
+                    "Ya existe una cuenta con ese número de identificación!"
+                );
+            }
+            if (email) {
+                throw new Error("Ya existe una cuenta con ese correo!");
+            }
             const newDriver = new Driver(input);
             await newDriver.save();
             return newDriver;
