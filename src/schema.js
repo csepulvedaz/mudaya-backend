@@ -10,6 +10,7 @@ const typeDefs = `
     }
 
     type AuthData {
+        client: String!
         userId: Int!
         token: String!
         tokenExpiration: Int!
