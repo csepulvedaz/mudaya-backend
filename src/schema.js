@@ -22,7 +22,7 @@ const typeDefs = `
         _id: Int!
         name: String!
         surname: String!
-        phone: Int!
+        phone: String!
         email: String!
         password: String!
     }
@@ -31,7 +31,7 @@ const typeDefs = `
         _id: Int!
         name: String!
         surname: String!
-        phone: Int!
+        phone: String!
         email: String!
         password: String!
     }
@@ -64,7 +64,7 @@ const typeDefs = `
         _id: Int!
         name: String!
         surname: String!
-        phone: Int!
+        phone: String!
         email: String!
         password: String!
     }
@@ -73,7 +73,7 @@ const typeDefs = `
         _id: Int!
         name: String!
         surname: String!
-        phone: Int!
+        phone: String!
         email: String!
         password: String!
     }

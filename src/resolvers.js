@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 import User from "./models/User";
 import Driver from "./models/Driver";
 import Vehicle from "./models/Vehicle";
@@ -39,7 +40,7 @@ export const resolvers = {
                 currentEmail = driver.email;
                 currentClient = "driver";
             }
-            const isEqual = password === currentPassword;
+            const isEqual = await bcrypt.compare(password, currentPassword);
             if (!isEqual) {
                 throw new Error("Contraseña incorrecta!");
             }
@@ -76,6 +77,7 @@ export const resolvers = {
             if (email) {
                 throw new Error("Ya existe una cuenta con ese correo!");
             }
+            input.password = await bcrypt.hash(input.password, 12);
             const newUser = new User(input);
             await newUser.save();
             return newUser;
