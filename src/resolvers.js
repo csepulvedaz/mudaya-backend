@@ -11,6 +11,9 @@ export const resolvers = {
         profileUser: async (_, { _id }) => {
             return await User.findOne({ _id: _id });
         },
+        profileDriver: async (_, { _id }) => {
+            return await Driver.findOne({ _id: _id });
+        },
         login: async (_, { email, password }) => {
             const user = await User.findOne({ email: email });
             const driver = await Driver.findOne({ email: email });

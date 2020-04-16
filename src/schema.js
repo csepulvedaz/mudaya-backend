@@ -6,6 +6,7 @@ const typeDefs = `
     type Query {
         users: [User]
         profileUser(_id:Int!): User
+        profileDriver(_id:Int!): Driver
         login(email: String!, password: String!): AuthData
         vehicles(type: String): [Vehicle]
     }
