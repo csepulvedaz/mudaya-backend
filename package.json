@@ -1,0 +1,34 @@
+{
+    "name": "backend",
+    "version": "1.0.0",
+    "description": "Backend mudaYa",
+    "main": "index.js",
+    "scripts": {
+        "build": "babel src -d dist --source-maps",
+        "dev": "nodemon src/index.js --exec babel-node src/index.js",
+        "serve": "node dist/index.js",
+        "clean": "rimraf dist"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "bcrypt": "^4.0.1",
+        "cors": "^2.8.5",
+        "dotenv": "^8.2.0",
+        "express": "^4.17.1",
+        "express-graphql": "^0.9.0",
+        "graphql": "^15.0.0",
+        "graphql-tools": "^4.0.7",
+        "jsonwebtoken": "^8.5.1",
+        "mongoose": "^5.9.7",
+        "rimraf": "^3.0.2"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.8.4",
+        "@babel/core": "^7.9.0",
+        "@babel/node": "^7.8.7",
+        "@babel/preset-env": "^7.9.0",
+        "nodemon": "^2.0.2"
+    }
+}
