@@ -74,10 +74,10 @@ const typeDefs = `
     type Mutation {
         createUser(input: userInput): User
         deleteUser(_id: Int): User
-        updateUser(_id: Int, input: userInput): User
+        updateUser(input: updateUserInput): User
         createDriver(input: driverInput): Driver
         deleteDriver(_id: Int): Driver
-        updateDriver(_id: Int, input: driverInput): Driver
+        updateDriver( input: updateDriverInput): Driver
         createVehicle(input: vehicleInput): Vehicle
         deleteVehicle(_id: String): Vehicle
         updateVehicle(_id: String, input: vehicleInput): Vehicle
@@ -85,6 +85,19 @@ const typeDefs = `
         updateService(_id: ID, input: serviceDriverResponseInput): Service
         acceptService(_id: ID): Service
         cancelService(_id: ID): Service
+    }
+
+    input updateUserInput{
+        _id: Int!
+        name: String!
+        surname: String!
+        phone: String!
+    }
+    input updateDriverInput{
+        _id: Int!
+        name: String!
+        surname: String!
+        phone: String!
     }
 
     input userInput {
