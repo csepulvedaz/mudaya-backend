@@ -85,8 +85,9 @@ export const resolvers = {
         async deleteUser(_, { _id }) {
             return await User.findByIdAndDelete(_id);
         },
-        async updateUser(_, { _id, input }) {
-            return await User.findByIdAndUpdate(_id, input, { new: true });
+        async updateUser(_, { input }) {
+            return await User.findByIdAndUpdate(input._id, input, { new: true });
+        
         },
 
         //Create Driver
@@ -108,9 +109,11 @@ export const resolvers = {
         async deleteDriver(_, { _id }) {
             return await Driver.findByIdAndDelete(_id);
         },
-        async updateDriver(_, { _id, input }) {
-            return await Driver.findByIdAndUpdate(_id, input, { new: true });
+        async updateDriver(_, { input }) {
+            return await Driver.findByIdAndUpdate(input._id, input, { new: true });
         },
+
+        
 
         //Create Vehicle
         async createVehicle(_, { input }) {
