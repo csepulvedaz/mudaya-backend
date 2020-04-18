@@ -32,6 +32,10 @@ const driverSchema = new Schema(
             type: String,
             ref: "Vehicle",
         },
+        idService: {
+            type: [Schema.Types.ObjectId],
+            ref: "Service",
+        },
     },
     {
         versionKey: false,

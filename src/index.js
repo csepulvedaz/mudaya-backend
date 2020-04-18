@@ -24,6 +24,6 @@ app.listen(app.get("port"), () =>
     console.log(
         `Running a GraphQL API server at http://localhost:${app.get(
             "port"
-        )}/graphql;`
+        )}/graphql`
     )
 );

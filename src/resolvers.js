@@ -1,10 +1,32 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import { GraphQLScalarType } from "graphql";
+import { Kind } from "graphql/language";
+import dayjs from "dayjs";
+
 import User from "./models/User";
 import Driver from "./models/Driver";
 import Vehicle from "./models/Vehicle";
+import Service from "./models/Service";
 
 export const resolvers = {
+    Date: new GraphQLScalarType({
+        name: "Date",
+        description: "Date custom scalar type",
+        parseValue(value) {
+            return dayjs(value); // value from the client
+        },
+        serialize(value) {
+            return dayjs(value).format("YYYY-MM-DD HH:mm"); // value sent to the client
+        },
+        parseLiteral(ast) {
+            if (ast.kind === Kind.STRING) {
+                return dayjs(ast.value); // ast value is always in string format
+            }
+            return null;
+        },
+    }),
+
     Query: {
         users: async () => {
             return await User.find();
@@ -64,8 +86,9 @@ export const resolvers = {
             return await Vehicle.find();
         },
     },
+
     Mutation: {
-        //Create User
+        //User
         async createUser(_, { input }) {
             const id = await User.findOne({ _id: input._id });
             const email = await User.findOne({ email: input.email });
@@ -89,7 +112,7 @@ export const resolvers = {
             return await User.findByIdAndUpdate(_id, input, { new: true });
         },
 
-        //Create Driver
+        //Driver
         async createDriver(_, { input }) {
             const id = await Driver.findOne({ _id: input._id });
             const email = await Driver.findOne({ email: input.email });
@@ -101,6 +124,7 @@ export const resolvers = {
             if (email) {
                 throw new Error("Ya existe una cuenta con ese correo!");
             }
+            input.password = await bcrypt.hash(input.password, 12);
             const newDriver = new Driver(input);
             await newDriver.save();
             return newDriver;
@@ -112,7 +136,7 @@ export const resolvers = {
             return await Driver.findByIdAndUpdate(_id, input, { new: true });
         },
 
-        //Create Vehicle
+        //Vehicle
         async createVehicle(_, { input }) {
             const id = await Vehicle.findOne({ _id: input._id });
             if (id) {
@@ -133,6 +157,39 @@ export const resolvers = {
         },
         async updateVehicle(_, { _id, input }) {
             return await Vehicle.findByIdAndUpdate(_id, input, { new: true });
+        },
+
+        //Service
+        async createService(_, { input }) {
+            const newService = new Service(input);
+            return await newService
+                .save()
+                .then(async () => await User.findById(input.idUser))
+                .then(async (user) => {
+                    user.idService.push(newService);
+                    return await user.save();
+                })
+                .then(async () => await Driver.findById(input.idDriver))
+                .then(async (driver) => {
+                    driver.idService.push(newService);
+                    await driver.save();
+                    return newService;
+                });
+        },
+        async updateService(_, { _id, input }) {
+            return await Service.findByIdAndUpdate(_id, input, { new: true });
+        },
+        async acceptService(_, { _id }) {
+            const input = {
+                state = "accepted"
+            }
+            return await Service.findByIdAndUpdate(_id, input, { new: true });
+        },
+        async cancelService(_, { _id }) {
+            const input = {
+                state = "cancelled"
+            }
+            return await Service.findByIdAndUpdate(_id, input, { new: true });
         },
     },
 };

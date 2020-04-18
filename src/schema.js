@@ -3,6 +3,16 @@ import { resolvers } from "./resolvers";
 
 const typeDefs = `
 
+    scalar Date
+
+    enum State {
+        started
+        onHold
+        accepted
+        cancelled
+        finished
+      }
+
     type Query {
         users: [User]
         profileUser(_id:Int!): User
@@ -48,6 +58,19 @@ const typeDefs = `
         idDriver: Int!
     }
 
+    type Service {
+        date:  Date!
+        origin: String!
+        destination: String!
+        commentaryUser: String
+        commentaryDriver: String
+        state: State!
+        price: Int
+        idUser: Int!
+        idDriver: Int!
+        idVehicle: String!
+    }
+
     type Mutation {
         createUser(input: userInput): User
         deleteUser(_id: Int): User
@@ -58,6 +81,10 @@ const typeDefs = `
         createVehicle(input: vehicleInput): Vehicle
         deleteVehicle(_id: String): Vehicle
         updateVehicle(_id: String, input: vehicleInput): Vehicle
+        createService(input: serviceInput): Service
+        updateService(_id: ID, input: serviceDriverResponseInput): Service
+        acceptService(_id: ID): Service
+        cancelService(_id: ID): Service
     }
 
     input userInput {
@@ -88,6 +115,26 @@ const typeDefs = `
         capacity: String!
         commentary: String!
         idDriver: Int!
+    }
+
+    input serviceInput {
+        date:  Date!
+        origin: String!
+        destination: String!
+        commentaryUser: String
+        commentaryDriver: String
+        state: State!
+        price: Int
+        idUser: Int!
+        idDriver: Int!
+        idVehicle: String!
+    }
+
+    input serviceDriverResponseInput {
+        client: String!
+        commentary: String
+        state: State!
+        price: Int!
     }
 
 `;
