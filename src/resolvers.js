@@ -109,8 +109,9 @@ export const resolvers = {
             return await User.findByIdAndDelete(_id);
         },
         async updateUser(_, { input }) {
-            return await User.findByIdAndUpdate(input._id, input, { new: true });
-        
+            return await User.findByIdAndUpdate(input._id, input, {
+                new: true,
+            });
         },
 
         //Driver
@@ -134,7 +135,9 @@ export const resolvers = {
             return await Driver.findByIdAndDelete(_id);
         },
         async updateDriver(_, { input }) {
-            return await Driver.findByIdAndUpdate(input._id, input, { new: true });
+            return await Driver.findByIdAndUpdate(input._id, input, {
+                new: true,
+            });
         },
 
         //Vehicle
@@ -182,14 +185,14 @@ export const resolvers = {
         },
         async acceptService(_, { _id }) {
             const input = {
-                state = "accepted"
-            }
+                state: "accepted",
+            };
             return await Service.findByIdAndUpdate(_id, input, { new: true });
         },
         async cancelService(_, { _id }) {
             const input = {
-                state = "cancelled"
-            }
+                state: "cancelled",
+            };
             return await Service.findByIdAndUpdate(_id, input, { new: true });
         },
     },
