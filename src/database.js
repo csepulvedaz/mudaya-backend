@@ -11,6 +11,7 @@ mongoose
         {
             useNewUrlParser: true,
             useUnifiedTopology: true,
+            useFindAndModify: false,
         }
     )
     .then((db) => console.log("Database is conected"))
