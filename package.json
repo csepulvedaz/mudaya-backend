@@ -6,7 +6,7 @@
     "scripts": {
         "build": "babel src -d dist --source-maps",
         "dev": "nodemon src/index.js --exec babel-node src/index.js",
-        "serve": "node dist/index.js",
+        "serve": "cp .env dist/ && node dist/index.js",
         "clean": "rimraf dist"
     },
     "keywords": [],
