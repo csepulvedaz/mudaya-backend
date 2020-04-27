@@ -34,7 +34,7 @@ describe("Vehicle Model Test", () => {
         const validVehicle = new Vehicle(vehicleData);
         const savedVehicle = await validVehicle.save();
         // Object Id should be defined when successfully saved to MongoDB.
-        expect(savedVehicle._id).toBeDefined();
+        expect(savedVehicle._id).toBe(vehicleData._id);
         expect(savedVehicle.brand).toBe(vehicleData.brand);
         expect(savedVehicle.model).toBe(vehicleData.model);
         expect(savedVehicle.year).toBe(vehicleData.year);
