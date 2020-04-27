@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { GraphQLScalarType } from "graphql";
-import { Kind } from "graphql/language";
+import {GraphQLScalarType} from "graphql";
+import {Kind} from "graphql/language";
 import dayjs from "dayjs";
 
 import User from "./models/User";
@@ -81,9 +81,18 @@ export const resolvers = {
                 tokenExpiration: 1,
             };
         },
+        vehicle: async (_, { _id }) => {
+            return Vehicle.findOne({_id: _id});
+        },
+        vehiclesByDriver: async (_, { idDriver }) => {
+            return await Vehicle.find({ idDriver: idDriver });
+        },
         vehicles: async (_, { type }) => {
             if (type) return await Vehicle.find({ type: type });
             return await Vehicle.find();
+        },
+        servicesByDriver: async (_, { idDriver }) => {
+            return await Service.find({ idDriver: idDriver });
         },
     },
 
