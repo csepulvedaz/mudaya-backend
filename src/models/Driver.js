@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 
 const driverSchema = new Schema(
     {
-        _id: { type: Number, required: true },
+        _id: { type: String, required: true },
         name: {
             type: String,
             required: true,

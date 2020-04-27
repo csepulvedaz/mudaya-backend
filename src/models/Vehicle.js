@@ -29,10 +29,9 @@ const vehicleSchema = new Schema(
         },
         commentary: {
             type: String,
-            // required: true,
         },
         idDriver: {
-            type: Number,
+            type: String,
             ref: "Driver",
         },
     },

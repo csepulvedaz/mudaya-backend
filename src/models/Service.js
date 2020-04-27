@@ -27,12 +27,12 @@ const serviceSchema = new Schema(
             type: Number,
         },
         idUser: {
-            type: Number,
+            type: String,
             required: true,
             ref: "User",
         },
         idDriver: {
-            type: Number,
+            type: String,
             ref: "Driver",
         },
         idVehicle: {
