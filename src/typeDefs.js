@@ -15,7 +15,10 @@ export const typeDefs = `
         profileUser(_id:String!): User
         profileDriver(_id:String!): Driver
         login(email: String!, password: String!): AuthData
+        vehicle(_id:String!): Vehicle
+        vehiclesByDriver(idDriver: String!): [Vehicle]
         vehicles(type: String): [Vehicle]
+        servicesByDriver(idDriver: String!): [Service]
     }
 
     type AuthData {
@@ -90,7 +93,6 @@ export const typeDefs = `
         surname: String!
         phone: String!
     }
-    
     input updateDriverInput{
         _id: String!
         name: String!
@@ -147,5 +149,4 @@ export const typeDefs = `
         state: State!
         price: Int!
     }
-
 `;
