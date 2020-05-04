@@ -13,6 +13,7 @@ import Service from "./models/Service";
 const pubsub = new PubSub();
 
 const SERVICE_ADDED = "SERVICE_ADDED";
+const SERVICE_UPDATED = "SERVICE_UPDATED";
 
 export const resolvers = {
     Date: new GraphQLScalarType({
@@ -44,6 +45,19 @@ export const resolvers = {
                         payload.serviceAdded.idUser === variables._id ||
                         payload.serviceAdded.idDriver === variables._id
                     );
+                }
+            ),
+        },
+        serviceUpdated: {
+            resolve: (payload) => {
+                return payload.serviceUpdated;
+            },
+            subscribe: withFilter(
+                () => pubsub.asyncIterator("SERVICE_UPDATED"),
+                (payload, variables) => {
+                    console.log(payload._id, variables._id);
+
+                    return payload._id === variables._id;
                 }
             ),
         },
@@ -115,6 +129,9 @@ export const resolvers = {
         },
         servicesByDriver: async (_, { idDriver }) => {
             return await Service.find({ idDriver: idDriver });
+        },
+        servicesByUser: async (_, { idUser }) => {
+            return await Service.find({ idUser: idUser });
         },
     },
 
@@ -217,7 +234,14 @@ export const resolvers = {
                 });
         },
         async updateService(_, { _id, input }) {
-            return await Service.findByIdAndUpdate(_id, input, { new: true });
+            const service = await Service.findByIdAndUpdate(_id, input, {
+                new: true,
+            });
+            pubsub.publish(SERVICE_UPDATED, {
+                serviceUpdated: service,
+                _id: _id,
+            });
+            return service;
         },
         async acceptService(_, { _id }) {
             const input = {

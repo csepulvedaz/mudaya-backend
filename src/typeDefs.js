@@ -13,6 +13,7 @@ export const typeDefs = gql`
 
     type Subscription {
         serviceAdded(_id: String!): Service
+        serviceUpdated(_id: ID!): Service
     }
 
     type Query {
@@ -24,6 +25,7 @@ export const typeDefs = gql`
         vehiclesByDriver(idDriver: String!): [Vehicle]
         vehicles(type: String): [Vehicle]
         servicesByDriver(idDriver: String!): [Service]
+        servicesByUser(idUser: String!): [Service]
     }
 
     type AuthData {
@@ -64,13 +66,14 @@ export const typeDefs = gql`
     }
 
     type Service {
+        _id: ID
         date: Date!
         origin: String!
         destination: String!
         commentaryUser: String
         commentaryDriver: String
         state: State!
-        price: Int
+        price: String
         idUser: String!
         idDriver: String!
         idVehicle: String!
@@ -87,7 +90,7 @@ export const typeDefs = gql`
         deleteVehicle(_id: String): Vehicle
         updateVehicle(_id: String, input: vehicleInput): Vehicle
         createService(input: serviceInput): Service
-        updateService(_id: String, input: serviceDriverResponseInput): Service
+        updateService(_id: ID, input: serviceDriverResponseInput): Service
         acceptService(_id: String): Service
         cancelService(_id: String): Service
     }
@@ -140,18 +143,15 @@ export const typeDefs = gql`
         origin: String!
         destination: String!
         commentaryUser: String
-        commentaryDriver: String
         state: State!
-        price: Int
         idUser: String!
         idDriver: String!
         idVehicle: String!
     }
 
     input serviceDriverResponseInput {
-        client: String!
-        commentary: String
+        commentaryDriver: String
         state: State!
-        price: Int!
+        price: String!
     }
 `;
