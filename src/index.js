@@ -1,29 +1,12 @@
-import express from "express";
-import graphqlHTTP from "express-graphql";
-import schema from "./schema";
-import cors from "cors";
-import isAuth from "./middleware/is-auth";
+import { ApolloServer } from "apollo-server";
+
+import { resolvers } from "./resolvers";
+import { typeDefs } from "./typeDefs";
 import "./database";
 
-const app = express();
-app.use(cors());
+const server = new ApolloServer({ typeDefs, resolvers });
 
-app.use(isAuth);
-
-app.set("port", process.env.PORT || 4000);
-
-app.use(
-    "/graphql",
-    graphqlHTTP({
-        schema: schema,
-        graphiql: true,
-    })
-);
-
-app.listen(app.get("port"), () =>
-    console.log(
-        `Running a GraphQL API server at http://localhost:${app.get(
-            "port"
-        )}/graphql`
-    )
-);
+// The `listen` method launches a web server.
+server.listen().then(({ url }) => {
+    console.log(`🚀  Server ready at ${url}`);
+});

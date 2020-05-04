@@ -1,5 +1,6 @@
-export const typeDefs = `
+import { gql } from "apollo-server";
 
+export const typeDefs = gql`
     scalar Date
 
     enum State {
@@ -12,10 +13,10 @@ export const typeDefs = `
 
     type Query {
         users: [User]
-        profileUser(_id:String!): User
-        profileDriver(_id:String!): Driver
+        profileUser(_id: String!): User
+        profileDriver(_id: String!): Driver
         login(email: String!, password: String!): AuthData
-        vehicle(_id:String!): Vehicle
+        vehicle(_id: String!): Vehicle
         vehiclesByDriver(idDriver: String!): [Vehicle]
         vehicles(type: String): [Vehicle]
         servicesByDriver(idDriver: String!): [Service]
@@ -59,7 +60,7 @@ export const typeDefs = `
     }
 
     type Service {
-        date:  Date!
+        date: Date!
         origin: String!
         destination: String!
         commentaryUser: String
@@ -77,7 +78,7 @@ export const typeDefs = `
         updateUser(input: updateUserInput): User
         createDriver(input: driverInput): Driver
         deleteDriver(_id: String): Driver
-        updateDriver( input: updateDriverInput): Driver
+        updateDriver(input: updateDriverInput): Driver
         createVehicle(input: vehicleInput): Vehicle
         deleteVehicle(_id: String): Vehicle
         updateVehicle(_id: String, input: vehicleInput): Vehicle
@@ -87,13 +88,13 @@ export const typeDefs = `
         cancelService(_id: String): Service
     }
 
-    input updateUserInput{
+    input updateUserInput {
         _id: String!
         name: String!
         surname: String!
         phone: String!
     }
-    input updateDriverInput{
+    input updateDriverInput {
         _id: String!
         name: String!
         surname: String!
@@ -131,7 +132,7 @@ export const typeDefs = `
     }
 
     input serviceInput {
-        date:  Date!
+        date: Date!
         origin: String!
         destination: String!
         commentaryUser: String

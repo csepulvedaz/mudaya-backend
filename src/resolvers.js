@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import {GraphQLScalarType} from "graphql";
-import {Kind} from "graphql/language";
+import { GraphQLScalarType } from "graphql";
+import { Kind } from "graphql/language";
 import dayjs from "dayjs";
 
 import User from "./models/User";
@@ -82,7 +82,7 @@ export const resolvers = {
             };
         },
         vehicle: async (_, { _id }) => {
-            return Vehicle.findOne({_id: _id});
+            return Vehicle.findOne({ _id: _id });
         },
         vehiclesByDriver: async (_, { idDriver }) => {
             return await Vehicle.find({ idDriver: idDriver });
@@ -174,6 +174,10 @@ export const resolvers = {
 
         //Service
         async createService(_, { input }) {
+            const date = await Service.findOne({ date: input.date });
+            if (date) {
+                throw new Error("El vehiculo esta reserveado para esa fecha!");
+            }
             const newService = new Service(input);
             return await newService
                 .save()
