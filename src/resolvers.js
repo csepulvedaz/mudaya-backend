@@ -3,11 +3,16 @@ import bcrypt from "bcrypt";
 import { GraphQLScalarType } from "graphql";
 import { Kind } from "graphql/language";
 import dayjs from "dayjs";
+import { PubSub, withFilter } from "apollo-server";
 
 import User from "./models/User";
 import Driver from "./models/Driver";
 import Vehicle from "./models/Vehicle";
 import Service from "./models/Service";
+
+const pubsub = new PubSub();
+
+const SERVICE_ADDED = "SERVICE_ADDED";
 
 export const resolvers = {
     Date: new GraphQLScalarType({
@@ -26,6 +31,23 @@ export const resolvers = {
             return null;
         },
     }),
+
+    Subscription: {
+        serviceAdded: {
+            resolve: (payload) => {
+                return payload.serviceAdded;
+            },
+            subscribe: withFilter(
+                () => pubsub.asyncIterator("SERVICE_ADDED"),
+                (payload, variables) => {
+                    return (
+                        payload.serviceAdded.idUser === variables._id ||
+                        payload.serviceAdded.idDriver === variables._id
+                    );
+                }
+            ),
+        },
+    },
 
     Query: {
         users: async () => {
@@ -179,6 +201,7 @@ export const resolvers = {
                 throw new Error("El vehiculo esta reserveado para esa fecha!");
             }
             const newService = new Service(input);
+            pubsub.publish(SERVICE_ADDED, { serviceAdded: newService });
             return await newService
                 .save()
                 .then(async () => await User.findById(input.idUser))

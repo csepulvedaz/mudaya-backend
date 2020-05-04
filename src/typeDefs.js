@@ -11,6 +11,10 @@ export const typeDefs = gql`
         finished
     }
 
+    type Subscription {
+        serviceAdded(_id: String!): Service
+    }
+
     type Query {
         users: [User]
         profileUser(_id: String!): User
