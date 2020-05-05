@@ -91,8 +91,8 @@ export const typeDefs = gql`
         updateVehicle(_id: String, input: vehicleInput): Vehicle
         createService(input: serviceInput): Service
         updateService(_id: ID, input: serviceDriverResponseInput): Service
-        acceptService(_id: String): Service
-        cancelService(_id: String): Service
+        acceptService(_id: ID): Service
+        cancelService(_id: ID): Service
     }
 
     input updateUserInput {
