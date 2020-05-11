@@ -6,20 +6,20 @@
     "scripts": {
         "build": "babel src -d dist --source-maps",
         "dev": "nodemon src/index.js --exec babel-node src/index.js",
-        "serve": "node dist/index.js",
-        "clean": "rimraf dist"
+        "serve": "cp .env dist/ && node dist/index.js",
+        "clean": "rimraf dist",
+        "test": "jest --detectOpenHandles"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "apollo-server": "^2.12.0",
         "bcrypt": "^4.0.1",
-        "cors": "^2.8.5",
+        "dayjs": "^1.8.24",
         "dotenv": "^8.2.0",
-        "express": "^4.17.1",
-        "express-graphql": "^0.9.0",
         "graphql": "^15.0.0",
-        "graphql-tools": "^4.0.7",
+        "graphql-tools": "^5.0.0",
         "jsonwebtoken": "^8.5.1",
         "mongoose": "^5.9.7",
         "rimraf": "^3.0.2"
@@ -29,6 +29,8 @@
         "@babel/core": "^7.9.0",
         "@babel/node": "^7.8.7",
         "@babel/preset-env": "^7.9.0",
+        "@shelf/jest-mongodb": "^1.1.5",
+        "jest": "^25.4.0",
         "nodemon": "^2.0.2"
     }
 }

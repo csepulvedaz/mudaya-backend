@@ -1,38 +1,43 @@
 import { Schema, model } from "mongoose";
 
-const vehicleSchema = new Schema(
+const serviceSchema = new Schema(
     {
-        _id: { type: String, required: true },
-        brand: {
+        date: {
+            type: Date,
+            required: true,
+        },
+        origin: {
             type: String,
             required: true,
         },
-        model: {
+        destination: {
             type: String,
             required: true,
         },
-        year: {
-            type: Number,
-            required: true,
+        commentaryUser: {
+            type: String,
         },
-        type: {
+        commentaryDriver: {
+            type: String,
+        },
+        state: {
+            type: String,
+        },
+        price: {
+            type: String,
+        },
+        idUser: {
             type: String,
             required: true,
-        },
-        dimensions: {
-            type: String,
-            required: true,
-        },
-        capacity: {
-            type: String,
-            required: true,
-        },
-        commentary: {
-            type: String,
+            ref: "User",
         },
         idDriver: {
             type: String,
             ref: "Driver",
+        },
+        idVehicle: {
+            type: String,
+            ref: "Vehicle",
         },
     },
     {
@@ -40,4 +45,4 @@ const vehicleSchema = new Schema(
     }
 );
 
-export default model("Vehicle", vehicleSchema);
+export default model("Service", serviceSchema);

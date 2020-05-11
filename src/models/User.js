@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 
 const userSchema = new Schema(
     {
-        _id: { type: Number, required: true },
+        _id: { type: String, required: true },
         name: {
             type: String,
             required: true,
@@ -27,6 +27,10 @@ const userSchema = new Schema(
         password: {
             type: String,
             required: true,
+        },
+        idService: {
+            type: [Schema.Types.ObjectId],
+            ref: "Service",
         },
     },
     {
