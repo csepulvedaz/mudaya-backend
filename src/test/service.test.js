@@ -66,4 +66,9 @@ describe("Service Model Test", () => {
         expect(err.errors.destination).toBeDefined();
         expect(err.errors.idUser).toBeDefined();
     });
+    afterAll((done) => {
+        // Closing the DB connection allows Jest to exit successfully.
+        mongoose.connection.close();
+        done();
+    });
 });
