@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import Vehicle from "../models/Vehicle";
 
 const vehicleData = {
-    _id: "abc - 123",
+    _id: "abc - 333",
     brand: "Mazda",
     model: "Dos",
     year: 2020,
@@ -46,7 +46,7 @@ describe("Vehicle Model Test", () => {
 
     it("insert vehicle successfully, but the field does not defined in schema should be undefined", async () => {
         const vehicleWithInvalidField = new Vehicle({
-            _id: "aaa - 999",
+            _id: "aaa - 444",
             brand: "BMW",
             model: "tres",
             year: 2019,
@@ -76,5 +76,10 @@ describe("Vehicle Model Test", () => {
         expect(err.errors.type).toBeDefined();
         expect(err.errors.dimensions).toBeDefined();
         expect(err.errors.capacity).toBeDefined();
+    });
+    afterAll((done) => {
+        // Closing the DB connection allows Jest to exit successfully.
+        mongoose.connection.close();
+        done();
     });
 });

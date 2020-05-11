@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import Driver from "../models/Driver";
 
 const driverData = {
-    _id: "1234567891",
+    _id: "1234567291",
     name: "Thomas",
     surname: "Edison",
     phone: "3141592653",
@@ -42,7 +42,7 @@ describe("Driver Model Test", () => {
 
     it("insert driver successfully, but the field does not defined in schema should be undefined", async () => {
         const driverWithInvalidField = new Driver({
-            _id: "0987654321",
+            _id: "0987654399",
             name: "Miguel",
             surname: "Jose",
             phone: "2718281828",
@@ -70,5 +70,10 @@ describe("Driver Model Test", () => {
         expect(err.errors.phone).toBeDefined();
         expect(err.errors.email).toBeDefined();
         expect(err.errors.password).toBeDefined();
+    });
+    afterAll((done) => {
+        // Closing the DB connection allows Jest to exit successfully.
+        mongoose.connection.close();
+        done();
     });
 });

@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import User from "../models/User";
 
 const userData = {
-    _id: "1234567891",
+    _id: "1234599891",
     name: "Camilo",
     surname: "Sepulveda",
     phone: "3228121951",
@@ -42,7 +42,7 @@ describe("User Model Test", () => {
 
     it("insert user successfully, but the field does not defined in schema should be undefined", async () => {
         const userWithInvalidField = new User({
-            _id: "1234567890",
+            _id: "1234567888",
             name: "Miguel",
             surname: "Lopez",
             phone: "3228121952",
@@ -70,5 +70,10 @@ describe("User Model Test", () => {
         expect(err.errors.phone).toBeDefined();
         expect(err.errors.email).toBeDefined();
         expect(err.errors.password).toBeDefined();
+    });
+    afterAll((done) => {
+        // Closing the DB connection allows Jest to exit successfully.
+        mongoose.connection.close();
+        done();
     });
 });

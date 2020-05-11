@@ -4,11 +4,11 @@
     "description": "Backend mudaYa",
     "main": "index.js",
     "scripts": {
-        "build": "babel src -d dist --source-maps && cp .env dist/",
+        "build": "babel src -d dist --ignore '**/*.test.js --source-maps && cp .env dist/",
         "dev": "nodemon src/index.js --exec babel-node src/index.js",
         "start": "node dist/index.js",
         "clean": "rimraf dist",
-        "test": "jest --detectOpenHandles --ci --runInBand"
+        "test": "jest --ci --runInBand"
     },
     "keywords": [],
     "author": "",
