@@ -19,7 +19,8 @@ export const typeDefs = gql`
   type Query {
     users: [User]
     services: [Service]
-    servicesByDate(_id: String!, date: Date): [Service]
+    servicesByDateUpdated(_id: String!, client: String): [Service]
+    servicesByDateCreated(_id: String!): [Service]
     profileUser(_id: String!): User
     profileDriver(_id: String!): Driver
     login(email: String!, password: String!): AuthData
@@ -97,6 +98,8 @@ export const typeDefs = gql`
     updateService(_id: ID, input: serviceDriverResponseInput): Service
     acceptService(_id: ID): Service
     cancelService(_id: ID): Service
+    updateLogoutTimeDriver(_id: String): Driver
+    updateLogoutTimeUser(_id: String): User
   }
 
   input updateUserInput {

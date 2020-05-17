@@ -71,25 +71,37 @@ export const resolvers = {
     services: async () => {
       return await Service.find();
     },
-    servicesByDate: async (_, { _id, date }) => {
-      const user = await User.findOne({ email: email });
-      const driver = await Driver.findOne({ email: email });
+    servicesByDateUpdated: async (_, { _id, client }) => {
       let servicesReturn = [];
-      if (!user && !driver) {
-        throw new Error("El correo no existe!");
+      let dateLogOut;
+      let services = [];
+      if (client === "user") {
+        const user = await User.findOne({ _id: _id });
+        services = await Service.find({ idUser: _id });
+        dateLogOut = user.lastLogout;
       }
-      if (user && driver) {
-        throw new Error("Error!!");
-      }
-      if (user) {
-        const services = await Service.find({ idUser: _id });
-      }
-      if (driver) {
-        const services = await Service.find({ idUser: _id });
+      if (client === "driver") {
+        const driver = await Driver.findOne({ _id: _id });
+        services = await Service.find({ idDriver: _id });
+        dateLogOut = driver.lastLogout;
       }
       services.map((current, i) => {
-        if (current.date > date) {
-          servicesReturn.push(current.date);
+        if (current.updatedAt > dateLogOut) {
+          servicesReturn.push(current);
+        }
+      });
+      return servicesReturn;
+    },
+    servicesByDateCreated: async (_, { _id }) => {
+      let servicesReturn = [];
+      let dateLogOut;
+      let services = [];
+      const driver = await Driver.findOne({ _id: _id });
+      services = await Service.find({ idDriver: _id });
+      dateLogOut = driver.lastLogout;
+      services.map((current, i) => {
+        if (current.createdAt > dateLogOut) {
+          servicesReturn.push(current);
         }
       });
       return servicesReturn;
@@ -281,6 +293,30 @@ export const resolvers = {
         state: "cancelled",
       };
       return await Service.findByIdAndUpdate(_id, input, { new: true });
+    },
+    async updateLogoutTimeDriver(_, { _id }) {
+      const date = new Date(
+        new Date().getTime() - 3600 * 1000 * 5
+      ).toISOString();
+      return await Driver.findByIdAndUpdate(
+        _id,
+        { lastLogout: date },
+        {
+          new: true,
+        }
+      );
+    },
+    async updateLogoutTimeUser(_, { _id }) {
+      const date = new Date(
+        new Date().getTime() - 3600 * 1000 * 5
+      ).toISOString();
+      return await User.findByIdAndUpdate(
+        _id,
+        { lastLogout: date },
+        {
+          new: true,
+        }
+      );
     },
   },
 };
