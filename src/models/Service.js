@@ -47,9 +47,7 @@ const serviceSchema = new Schema(
     versionKey: false,
     timestamps: {
       currentTime: () =>
-        dayjs(
-          new Date().toLocaleString("en-US", { timeZone: "America/Bogota" })
-        ).format(),
+        new Date(new Date().getTime() - 3600 * 1000 * 5).toISOString(),
     },
   }
 );
