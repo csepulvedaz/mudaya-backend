@@ -87,8 +87,8 @@ export const resolvers = {
             }
             services.map((current, i) => {
                 if (
-                    current.updatedAt >= dateLogOut
-                    // && current.state !== "started"
+                    current.updatedAt >= dateLogOut &&
+                    current.state !== "started"
                 ) {
                     servicesReturn.push(current);
                 }
