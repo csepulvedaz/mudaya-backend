@@ -241,7 +241,7 @@ export const resolvers = {
                 .save()
                 .then(async () => await Driver.findById(input.idDriver))
                 .then(async (driver) => {
-                    driver.idVehicle = newVehicle;
+                    driver.idVehicle.push(newVehicle);
                     await driver.save();
                     return newVehicle;
                 });
