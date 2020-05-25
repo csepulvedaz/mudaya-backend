@@ -55,7 +55,10 @@ export const resolvers = {
             subscribe: withFilter(
                 () => pubsub.asyncIterator("SERVICE_UPDATED"),
                 (payload, variables) => {
-                    return payload.serviceUpdated.idUser === variables._id;
+                    return (
+                        payload.serviceUpdated.idUser === variables._id ||
+                        payload.serviceUpdated.idDriver === variables._id
+                    );
                 }
             ),
         },
