@@ -13,7 +13,7 @@ export const typeDefs = gql`
 
     type Subscription {
         serviceAdded(_id: String!): Service
-        serviceUpdated(_id: ID!): Service
+        serviceUpdated(_id: String!): Service
     }
 
     type Query {
