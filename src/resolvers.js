@@ -55,9 +55,10 @@ export const resolvers = {
             subscribe: withFilter(
                 () => pubsub.asyncIterator("SERVICE_UPDATED"),
                 (payload, variables) => {
-                    console.log(payload._id, variables._id);
-
-                    return payload._id === variables._id;
+                    return (
+                        payload.serviceUpdated.idUser === variables._id ||
+                        payload.serviceUpdated.idDriver === variables._id
+                    );
                 }
             ),
         },
@@ -241,7 +242,7 @@ export const resolvers = {
                 .save()
                 .then(async () => await Driver.findById(input.idDriver))
                 .then(async (driver) => {
-                    driver.idVehicle = newVehicle;
+                    driver.idVehicle.push(newVehicle);
                     await driver.save();
                     return newVehicle;
                 });
@@ -279,23 +280,30 @@ export const resolvers = {
             const service = await Service.findByIdAndUpdate(_id, input, {
                 new: true,
             });
-            pubsub.publish(SERVICE_UPDATED, {
-                serviceUpdated: service,
-                _id: _id,
-            });
+            pubsub.publish(SERVICE_UPDATED, { serviceUpdated: service });
             return service;
         },
         async acceptService(_, { _id }) {
             const input = {
                 state: "accepted",
             };
-            return await Service.findByIdAndUpdate(_id, input, { new: true });
+            const service = await Service.findByIdAndUpdate(_id, input, {
+                new: true,
+            });
+            pubsub.publish(SERVICE_UPDATED, { serviceUpdated: service });
+
+            return service;
         },
         async cancelService(_, { _id }) {
             const input = {
                 state: "cancelled",
             };
-            return await Service.findByIdAndUpdate(_id, input, { new: true });
+            const service = await Service.findByIdAndUpdate(_id, input, {
+                new: true,
+            });
+            pubsub.publish(SERVICE_UPDATED, { serviceUpdated: service });
+
+            return service;
         },
         async updateLogoutTimeDriver(_, { _id }) {
             const date = new Date(
