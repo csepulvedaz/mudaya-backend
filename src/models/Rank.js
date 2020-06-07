@@ -2,7 +2,6 @@ import {model, Schema} from "mongoose";
 
 const rankSchema = new Schema(
     {
-        _id: { type: String, required: true },
         value: {
             type: Number,
             required: true,

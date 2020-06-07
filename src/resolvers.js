@@ -323,6 +323,28 @@ export const resolvers = {
 
             return service;
         },
+        async finishService(_, { _id }) {
+            const input = {
+                state: "finished",
+            };
+            const service = await Service.findByIdAndUpdate(_id, input, {
+                new: true,
+            });
+            pubsub.publish(SERVICE_UPDATED, { serviceUpdated: service });
+
+            return service;
+        },
+        async rateService(_, { _id }) {
+            const input = {
+                state: "rated",
+            };
+            const service = await Service.findByIdAndUpdate(_id, input, {
+                new: true,
+            });
+            pubsub.publish(SERVICE_UPDATED, { serviceUpdated: service });
+
+            return service;
+        },
         async updateLogoutTimeDriver(_, { _id }) {
             const date = new Date(
                 new Date().getTime() - 3600 * 1000 * 5
@@ -358,11 +380,25 @@ export const resolvers = {
                     if (!rank){
                         rank = new Rank({value: 0.0, totalRatings: 0, idVehicle: input.idVehicle});
                     }
-                    rank.value.replace(rank.value + ((input.value - rank.value)/(rank.totalRatings + 1)));
-                    rank.totalRatings.replace(rank.totalRatings+1);
+                    rank.value = (rank.value + ((input.value - rank.value)/(rank.totalRatings + 1)));
+                    rank.totalRatings = (rank.totalRatings+1);
                     await rank.save();
                     return newRating;
                 });
+        },
+
+        async createComplainUser(_,{_id,complain}){
+            return await User .findByIdAndUpdate(
+                _id,
+                {$push:{complains:complain}}
+            );
+        },
+
+        async createComplainDriver(_,{_id,complain}){
+            return await Driver .findByIdAndUpdate(
+                _id,
+                {$push:{complains:complain}}
+            );
         },
     },
 };

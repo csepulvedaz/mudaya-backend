@@ -2,7 +2,6 @@ import {model, Schema} from "mongoose";
 
 const ratingSchema = new Schema(
     {
-        _id: { type: String, required: true },
         value: {
             type: Number,
             required: true,
@@ -20,7 +19,7 @@ const ratingSchema = new Schema(
             ref: "Vehicle",
         },
         idService: {
-            type: [Schema.Types.ObjectId],
+            type: Schema.Types.ObjectId,
             ref: "Service",
         },
     },

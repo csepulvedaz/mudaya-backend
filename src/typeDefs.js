@@ -9,6 +9,7 @@ export const typeDefs = gql`
         accepted
         cancelled
         finished
+        rated
     }
 
     type Subscription {
@@ -87,7 +88,7 @@ export const typeDefs = gql`
     }
     
     type Rating {
-        _id: String!
+        _id: ID
         value: Float!
         commentary: String
         idDriver: String!
@@ -96,7 +97,7 @@ export const typeDefs = gql`
     }
     
     type Rank {
-        _id: String!
+        _id: ID
         value: Float!
         totalRatings: Int!
         idVehicle: String!
@@ -116,9 +117,13 @@ export const typeDefs = gql`
         updateService(_id: ID, input: serviceDriverResponseInput): Service
         acceptService(_id: ID): Service
         cancelService(_id: ID): Service
+        finishService(_id: ID): Service
+        rateService(_id: ID): Service
         updateLogoutTimeDriver(_id: String): Driver
         updateLogoutTimeUser(_id: String): User
         createRating(input: ratingInput): Rating
+        createComplainUser(_id: String, complain: String): User
+        createComplainDriver(_id: String, complain: String): Driver
     }
 
     input updateUserInput {
