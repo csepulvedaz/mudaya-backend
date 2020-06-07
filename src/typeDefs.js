@@ -1,4 +1,4 @@
-import { gql } from "apollo-server";
+import {gql} from "apollo-server";
 
 export const typeDefs = gql`
     scalar Date
@@ -29,6 +29,10 @@ export const typeDefs = gql`
         vehicles(type: String): [Vehicle]
         servicesByDriver(idDriver: String!): [Service]
         servicesByUser(idUser: String!): [Service]
+        ratingsByDriver(idDriver: String!): [Rating]
+        ratingsByVehicle(idVehicle: String!): [Rating]
+        ratingByService(idService: String!): Rating
+        rankByVehicle(idVehicle: String!): Rank
     }
 
     type AuthData {
@@ -81,6 +85,22 @@ export const typeDefs = gql`
         idDriver: String!
         idVehicle: String!
     }
+    
+    type Rating {
+        _id: String!
+        value: Float!
+        commentary: String
+        idDriver: String!
+        idVehicle: String!
+        idService: ID!
+    }
+    
+    type Rank {
+        _id: String!
+        value: Float!
+        totalRatings: Int!
+        idVehicle: String!
+    }
 
     type Mutation {
         createUser(input: userInput): User
@@ -98,6 +118,7 @@ export const typeDefs = gql`
         cancelService(_id: ID): Service
         updateLogoutTimeDriver(_id: String): Driver
         updateLogoutTimeUser(_id: String): User
+        createRating(input: ratingInput): Rating
     }
 
     input updateUserInput {
@@ -158,5 +179,13 @@ export const typeDefs = gql`
         commentaryDriver: String
         state: State!
         price: String!
+    }
+    
+    input ratingInput {
+        value: Float!
+        commentary: String
+        idDriver: String!
+        idVehicle: String!
+        idService: ID!
     }
 `;

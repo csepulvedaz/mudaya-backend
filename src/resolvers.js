@@ -1,14 +1,16 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { GraphQLScalarType } from "graphql";
-import { Kind } from "graphql/language";
+import {GraphQLScalarType} from "graphql";
+import {Kind} from "graphql/language";
 import dayjs from "dayjs";
-import { PubSub, withFilter } from "apollo-server";
+import {PubSub, withFilter} from "apollo-server";
 
 import User from "./models/User";
 import Driver from "./models/Driver";
 import Vehicle from "./models/Vehicle";
 import Service from "./models/Service";
+import Rating from "./models/Rating";
+import Rank from "./models/Rank";
 
 const pubsub = new PubSub();
 
@@ -176,6 +178,22 @@ export const resolvers = {
         servicesByUser: async (_, { idUser }) => {
             return await Service.find({ idUser: idUser });
         },
+
+        //Rating
+        ratingsByDriver: async (_, { idDriver }) => {
+            return await Rating.find({ idDriver: idDriver });
+        },
+        ratingsByVehicle: async (_, { idVehicle }) => {
+            return await Rating.find({ idVehicle: idVehicle });
+        },
+        ratingByService: async (_, { idService }) => {
+            return await Rating.findOne({ idService: idService });
+        },
+
+        //Rank
+        rankByVehicle: async (_, { idVehicle }) => {
+            return Rank.findOne({ idVehicle: idVehicle });
+        },
     },
 
     Mutation: {
@@ -328,6 +346,23 @@ export const resolvers = {
                     new: true,
                 }
             );
+        },
+
+        //Rating && Rank
+        async createRating(_, { input }) {
+            const newRating = new Rating(input);
+            return await newRating
+                .save()
+                .then(async () => await Rank.findOne({ idVehicle: input.idVehicle }))
+                .then(async (rank) => {
+                    if (!rank){
+                        rank = new Rank({value: 0.0, totalRatings: 0, idVehicle: input.idVehicle});
+                    }
+                    rank.value.replace(rank.value + ((input.value - rank.value)/(rank.totalRatings + 1)));
+                    rank.totalRatings.replace(rank.totalRatings+1);
+                    await rank.save();
+                    return newRating;
+                });
         },
     },
 };
