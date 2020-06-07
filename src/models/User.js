@@ -35,6 +35,9 @@ const userSchema = new Schema(
     lastLogout: {
       type: Date,
     },
+    complains: {
+      type: [String],
+    },
   },
   {
     versionKey: false,

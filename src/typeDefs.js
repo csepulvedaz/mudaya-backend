@@ -98,6 +98,8 @@ export const typeDefs = gql`
         cancelService(_id: ID): Service
         updateLogoutTimeDriver(_id: String): Driver
         updateLogoutTimeUser(_id: String): User
+        createComplainUser(_id: String, complain: String): User
+        createComplainDriver(_id: String, complain: String): Driver
     }
 
     input updateUserInput {

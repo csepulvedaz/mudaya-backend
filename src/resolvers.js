@@ -329,5 +329,19 @@ export const resolvers = {
                 }
             );
         },
+
+        async createComplainUser(_,{_id,complain}){
+            return await User .findByIdAndUpdate(
+                _id,
+                {$push:{complains:complain}}
+            );
+        },
+
+        async createComplainDriver(_,{_id,complain}){
+            return await Driver .findByIdAndUpdate(
+                _id,
+                {$push:{complains:complain}}
+            );
+        },
     },
 };
