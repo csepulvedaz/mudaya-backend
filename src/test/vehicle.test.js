@@ -9,6 +9,8 @@ const vehicleData = {
     type: "Camion",
     dimensions: "1m x 1m x 1m",
     capacity: "1m x 1m x 1m",
+    department: "Cundinamarca",
+    city: "Bogota",
     commentary: "Comentario acerca del vehiculo",
 };
 
@@ -41,6 +43,8 @@ describe("Vehicle Model Test", () => {
         expect(savedVehicle.type).toBe(vehicleData.type);
         expect(savedVehicle.dimensions).toBe(vehicleData.dimensions);
         expect(savedVehicle.capacity).toBe(vehicleData.capacity);
+        expect(savedVehicle.department).toBe(vehicleData.department);
+        expect(savedVehicle.city).toBe(vehicleData.city);
         expect(savedVehicle.commentary).toBe(vehicleData.commentary);
     });
 
@@ -53,6 +57,8 @@ describe("Vehicle Model Test", () => {
             type: "Camion Grande",
             dimensions: "1m x 1m x 1m",
             capacity: "1m x 1m x 1m",
+            department: "Fucha",
+            city: "Fucha",
             nickname: "Tesla",
         });
         const savedVehicleWithInvalidField = await vehicleWithInvalidField.save();

@@ -168,8 +168,12 @@ export const resolvers = {
         vehiclesByDriver: async (_, { idDriver }) => {
             return await Vehicle.find({ idDriver: idDriver });
         },
-        vehicles: async (_, { type }) => {
-            if (type) return await Vehicle.find({ type: type });
+        vehicles: async (_, { type, department, city }) => {
+            if (type&&!department&&!city) return await Vehicle.find({ type: type });
+            if (!type&&department&&!city) return await Vehicle.find({ department: department });
+            if (!type&&city) return await Vehicle.find({ city: city });
+            if (type&&department&&!city) return await Vehicle.find({ type: type, department: department });
+            if (type&&city) return await Vehicle.find({ type: type, city: city });
             return await Vehicle.find();
         },
         servicesByDriver: async (_, { idDriver }) => {

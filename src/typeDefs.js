@@ -27,7 +27,7 @@ export const typeDefs = gql`
         login(email: String!, password: String!): AuthData
         vehicle(_id: String!): Vehicle
         vehiclesByDriver(idDriver: String!): [Vehicle]
-        vehicles(type: String): [Vehicle]
+        vehicles(type: String, department: String, city: String): [Vehicle]
         servicesByDriver(idDriver: String!): [Service]
         servicesByUser(idUser: String!): [Service]
         ratingsByDriver(idDriver: String!): [Rating]
@@ -69,6 +69,8 @@ export const typeDefs = gql`
         type: String!
         dimensions: String!
         capacity: String!
+        department: String
+        city: String
         commentary: String!
         idDriver: String!
     }
@@ -165,6 +167,8 @@ export const typeDefs = gql`
         type: String!
         dimensions: String!
         capacity: String!
+        department: String
+        city: String
         commentary: String!
         idDriver: String!
     }

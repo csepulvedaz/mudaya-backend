@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import {model, Schema} from "mongoose";
 
 const vehicleSchema = new Schema(
     {
@@ -24,6 +24,14 @@ const vehicleSchema = new Schema(
             required: true,
         },
         capacity: {
+            type: String,
+            required: true,
+        },
+        department: {
+            type: String,
+            required: true,
+        },
+        city: {
             type: String,
             required: true,
         },
