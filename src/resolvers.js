@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { GraphQLScalarType } from "graphql";
 import { Kind } from "graphql/language";
-import dayjs from "dayjs";
+// import dayjs from "dayjs";
 import { PubSub, withFilter } from "apollo-server";
 import moment from "moment-timezone";
 
