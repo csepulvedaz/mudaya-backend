@@ -2,7 +2,6 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { GraphQLScalarType } from "graphql";
 import { Kind } from "graphql/language";
-// import dayjs from "dayjs";
 import { PubSub, withFilter } from "apollo-server";
 import moment from "moment-timezone";
 
@@ -23,17 +22,14 @@ export const resolvers = {
         name: "Date",
         description: "Date custom scalar type",
         parseValue(value) {
-            return moment(value).tz("America/Bogota").format("LLL");
-            // return dayjs(value); // value from the client
+            return moment(value);
         },
         serialize(value) {
-            // return dayjs(value).format("YYYY-MM-DD HH:mm"); // value sent to the client
             return moment(value).tz("America/Bogota").format("LLL");
         },
         parseLiteral(ast) {
             if (ast.kind === Kind.STRING) {
-                // return dayjs(ast.value); // ast value is always in string format
-                return moment(ast.value).tz("America/Bogota").format("LLL");
+                return moment(ast.value);
             }
             return null;
         },
