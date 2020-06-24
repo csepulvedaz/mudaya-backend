@@ -21,6 +21,7 @@
         "graphql": "^15.0.0",
         "graphql-tools": "^5.0.0",
         "jsonwebtoken": "^8.5.1",
+        "moment-timezone": "^0.5.31",
         "mongoose": "^5.9.7",
         "rimraf": "^3.0.2"
     },

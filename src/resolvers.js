@@ -1,9 +1,10 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import {GraphQLScalarType} from "graphql";
-import {Kind} from "graphql/language";
+import { GraphQLScalarType } from "graphql";
+import { Kind } from "graphql/language";
 import dayjs from "dayjs";
-import {PubSub, withFilter} from "apollo-server";
+import { PubSub, withFilter } from "apollo-server";
+import moment from "moment-timezone";
 
 import User from "./models/User";
 import Driver from "./models/Driver";
@@ -22,14 +23,17 @@ export const resolvers = {
         name: "Date",
         description: "Date custom scalar type",
         parseValue(value) {
-            return dayjs(value); // value from the client
+            return moment(value).tz("America/Bogota").format("LLL");
+            // return dayjs(value); // value from the client
         },
         serialize(value) {
-            return dayjs(value).format("YYYY-MM-DD HH:mm"); // value sent to the client
+            // return dayjs(value).format("YYYY-MM-DD HH:mm"); // value sent to the client
+            return moment(value).tz("America/Bogota").format("LLL");
         },
         parseLiteral(ast) {
             if (ast.kind === Kind.STRING) {
-                return dayjs(ast.value); // ast value is always in string format
+                // return dayjs(ast.value); // ast value is always in string format
+                return moment(ast.value).tz("America/Bogota").format("LLL");
             }
             return null;
         },
@@ -169,11 +173,18 @@ export const resolvers = {
             return await Vehicle.find({ idDriver: idDriver });
         },
         vehicles: async (_, { type, department, city }) => {
-            if (type&&!department&&!city) return await Vehicle.find({ type: type });
-            if (!type&&department&&!city) return await Vehicle.find({ department: department });
-            if (!type&&city) return await Vehicle.find({ city: city });
-            if (type&&department&&!city) return await Vehicle.find({ type: type, department: department });
-            if (type&&city) return await Vehicle.find({ type: type, city: city });
+            if (type && !department && !city)
+                return await Vehicle.find({ type: type });
+            if (!type && department && !city)
+                return await Vehicle.find({ department: department });
+            if (!type && city) return await Vehicle.find({ city: city });
+            if (type && department && !city)
+                return await Vehicle.find({
+                    type: type,
+                    department: department,
+                });
+            if (type && city)
+                return await Vehicle.find({ type: type, city: city });
             return await Vehicle.find();
         },
         servicesByDriver: async (_, { idDriver }) => {
@@ -379,30 +390,37 @@ export const resolvers = {
             const newRating = new Rating(input);
             return await newRating
                 .save()
-                .then(async () => await Rank.findOne({ idVehicle: input.idVehicle }))
+                .then(
+                    async () =>
+                        await Rank.findOne({ idVehicle: input.idVehicle })
+                )
                 .then(async (rank) => {
-                    if (!rank){
-                        rank = new Rank({value: 0.0, totalRatings: 0, idVehicle: input.idVehicle});
+                    if (!rank) {
+                        rank = new Rank({
+                            value: 0.0,
+                            totalRatings: 0,
+                            idVehicle: input.idVehicle,
+                        });
                     }
-                    rank.value = (rank.value + ((input.value - rank.value)/(rank.totalRatings + 1)));
-                    rank.totalRatings = (rank.totalRatings+1);
+                    rank.value =
+                        rank.value +
+                        (input.value - rank.value) / (rank.totalRatings + 1);
+                    rank.totalRatings = rank.totalRatings + 1;
                     await rank.save();
                     return newRating;
                 });
         },
 
-        async createComplainUser(_,{_id,complain}){
-            return await User .findByIdAndUpdate(
-                _id,
-                {$push:{complains:complain}}
-            );
+        async createComplainUser(_, { _id, complain }) {
+            return await User.findByIdAndUpdate(_id, {
+                $push: { complains: complain },
+            });
         },
 
-        async createComplainDriver(_,{_id,complain}){
-            return await Driver .findByIdAndUpdate(
-                _id,
-                {$push:{complains:complain}}
-            );
+        async createComplainDriver(_, { _id, complain }) {
+            return await Driver.findByIdAndUpdate(_id, {
+                $push: { complains: complain },
+            });
         },
     },
 };
