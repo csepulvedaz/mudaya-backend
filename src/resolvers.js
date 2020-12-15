@@ -4,6 +4,9 @@ import { GraphQLScalarType } from "graphql";
 import { Kind } from "graphql/language";
 import { PubSub, withFilter } from "apollo-server";
 import moment from "moment-timezone";
+import { authenticate } from "ldap-authentication";
+import ldap from "ldapjs";
+import dotenv from "dotenv";
 
 import User from "./models/User";
 import Driver from "./models/Driver";
@@ -12,10 +15,58 @@ import Service from "./models/Service";
 import Rating from "./models/Rating";
 import Rank from "./models/Rank";
 
+dotenv.config();
 const pubsub = new PubSub();
 
 const SERVICE_ADDED = "SERVICE_ADDED";
 const SERVICE_UPDATED = "SERVICE_UPDATED";
+const BASE = process.env.BASE;
+const URL = process.env.URL;
+
+const ldapAuth = async (email) => {
+    const exist = await authenticate({
+        ldapOpts: { url: URL },
+        userDn: `cn=admin,${BASE}`,
+        userPassword: "admin",
+        userSearchBase: BASE,
+        usernameAttribute: "cn",
+        username: email,
+    })
+        .then((res) => {
+            return true;
+        })
+        .catch((e) => {
+            return false;
+        });
+    return exist;
+};
+
+const ldapCreate = (name, surname, email, password) => {
+    var client = ldap.createClient({
+        url: URL,
+    });
+
+    var newDN = `cn=${email},ou=sa,${BASE}`;
+    var newUser = {
+        givenName: name,
+        cn: email,
+        sn: surname,
+        uid: email.substring(0, email.lastIndexOf("@")),
+        mail: email,
+        objectClass: "inetOrgPerson",
+        userPassword: password,
+    };
+
+    client.bind(`cn=admin,${BASE}`, "admin", function (err) {
+        if (err) {
+            console.log(err);
+        } else {
+            client.add(newDN, newUser, (message) => {
+                console.log(message?.lde_message);
+            });
+        }
+    });
+};
 
 export const resolvers = {
     Date: new GraphQLScalarType({
@@ -121,6 +172,8 @@ export const resolvers = {
         login: async (_, { email, password }) => {
             const user = await User.findOne({ email: email });
             const driver = await Driver.findOne({ email: email });
+            const ldap = await ldapAuth(email);
+
             let currentPassword;
             let currentId;
             let currentEmail;
@@ -131,13 +184,16 @@ export const resolvers = {
             if (user && driver) {
                 throw new Error("Error!!");
             }
-            if (user) {
+            if (!ldap) {
+                throw new Error("El usuario no existe!");
+            }
+            if (user && ldap) {
                 currentId = user._id;
                 currentPassword = user.password;
                 currentEmail = user.email;
                 currentClient = "user";
             }
-            if (driver) {
+            if (driver && ldap) {
                 currentId = driver._id;
                 currentPassword = driver.password;
                 currentEmail = driver.email;
@@ -212,15 +268,17 @@ export const resolvers = {
         async createUser(_, { input }) {
             const id = await User.findOne({ _id: input._id });
             const email = await User.findOne({ email: input.email });
+            input.password = await bcrypt.hash(input.password, 12);
+            const ldap = await ldapAuth(input.email);
             if (id) {
                 throw new Error(
                     "Ya existe una cuenta con ese número de identificación!"
                 );
             }
-            if (email) {
+            if (email || ldap) {
                 throw new Error("Ya existe una cuenta con ese correo!");
             }
-            input.password = await bcrypt.hash(input.password, 12);
+            ldapCreate(input.name, input.surname, input.email, input.password);
             const newUser = new User(input);
             await newUser.save();
             return newUser;
@@ -238,15 +296,17 @@ export const resolvers = {
         async createDriver(_, { input }) {
             const id = await Driver.findOne({ _id: input._id });
             const email = await Driver.findOne({ email: input.email });
+            input.password = await bcrypt.hash(input.password, 12);
+            const ldap = await ldapAuth(input.email);
             if (id) {
                 throw new Error(
                     "Ya existe una cuenta con ese número de identificación!"
                 );
             }
-            if (email) {
+            if (email || ldap) {
                 throw new Error("Ya existe una cuenta con ese correo!");
             }
-            input.password = await bcrypt.hash(input.password, 12);
+            ldapCreate(input.name, input.surname, input.email, input.password);
             const newDriver = new Driver(input);
             await newDriver.save();
             return newDriver;
