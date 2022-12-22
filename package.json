@@ -20,7 +20,7 @@
         "dotenv": "^8.2.0",
         "graphql": "^15.0.0",
         "graphql-tools": "^5.0.0",
-        "jsonwebtoken": "^8.5.1",
+        "jsonwebtoken": "^9.0.0",
         "ldap-authentication": "^2.2.6",
         "ldapjs": "^2.2.3",
         "moment-timezone": "^0.5.31",
